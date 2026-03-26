@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 
 export default {
   trustHost: true,
+  secret: process.env.AUTH_SECRET,
   session: { strategy: "jwt", maxAge: 60 * 60 * 12 },
   pages: { signIn: "/admin/login" },
   providers: [
