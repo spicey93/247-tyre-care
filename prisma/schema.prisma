@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id           String    @id @default(cuid())
+  name         String
+  phone        String
+  email        String
+  registration String?
+  postcode     String
+  message      String
+  referrer     String?
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  landingPath  String?
+  sessionId    String?
+  createdAt    DateTime  @default(now())
+  /// Set when an admin opens the lead detail page; null = unread / “new”.
+  readAt       DateTime?
+
+  @@index([createdAt])
+  @@index([email, createdAt])
+  @@index([readAt])
+}
+
+enum AnalyticsEventType {
+  page_view
+  tel_click
+  form_submit
+}
+
+model AnalyticsEvent {
+  id          String             @id @default(cuid())
+  type        AnalyticsEventType
+  sessionId   String
+  path        String
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  userAgent   String?
+  createdAt   DateTime           @default(now())
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+}
